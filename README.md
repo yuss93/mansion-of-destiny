@@ -8,7 +8,7 @@ In my first semester I had a final project — build a game in C++ using object-
 
 The game worked, but it only ran in the terminal. So I decided to take it further and convert it into a web version that anyone can play without installing anything.
 
-**Play it here → [yourusername.github.io/mansion-of-destiny](https://yourusername.github.io/mansion-of-destiny)**
+**Play it here → https://github.com/yuss93/mansion-of-destiny
 
 ---
 
