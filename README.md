@@ -61,39 +61,6 @@ game.js
 
 ---
 
-## Setting up the global leaderboard
-
-The game works without this — scores save in the browser. If you want to enable the global leaderboard:
-
-1. Create a free account at [supabase.com](https://supabase.com)
-2. Create a new project
-3. Run this in the SQL editor:
-
-```sql
-CREATE TABLE scores (
-  id        bigint generated always as identity primary key,
-  name      text not null,
-  score     integer not null,
-  rank      text,
-  diff      text,
-  played_at timestamp with time zone default now()
-);
-
-ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Anyone can read scores" ON scores FOR SELECT USING (true);
-CREATE POLICY "Anyone can insert scores" ON scores FOR INSERT WITH CHECK (true);
-```
-
-4. Go to Settings → API and copy your Project URL and anon key
-5. Open `game.js` and replace these two lines:
-
-```javascript
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
-```
-
----
-
 ## Original C++ files
 
 The original terminal version is in the `/cpp` folder if you want to see where this started.
