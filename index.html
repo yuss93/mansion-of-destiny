@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mansion of Destiny — Yusuf Dirawi</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="stage-0">
+
+  <!-- ══ TITLE SCREEN ══ -->
+  <div id="screen-title" class="screen active">
+    <div class="title-content">
+      <pre class="mansion-ascii">
+    =====================================================================
+                          WELCOME TO THE MANSION
+    =====================================================================
+        /    \     / .  \                  |         /    \
+       /      \   /  |@> \       /\       / \       /      \
+      /     /\ \ /   |    \     /  \     /   \     /        \
+     /     /  \ /  _ | _   \   /    \    | O |    /          _   _
+    /     /    \  |_|_|_|   \ /      \   |___|   /          | |_| |
+   /     /      \  | O |    /        \  | |_|  /      /\   |       |
+       _   _   _ \ |___|   /          \ |__|| /      /  \  |  O  O |
+      | |_| |_| |  | |_|  /             | |_|      /    \ |   __   |
+      |         |  |__|| /              |_| |      /      |     |   |
+      | O  O  O |  | |_|/               |__ |    /       | O  O  O |
+      |_________|__|___|___________________|__|__|_________|_________|
+    =====================================================================
+          Explore the mansion · Survive Asura · Claim the throne
+    =====================================================================</pre>
+
+      <h1 class="game-title">Mansion of Destiny</h1>
+      <p class="game-byline">by Yusuf Dirawi &nbsp;·&nbsp; Originally written in C++</p>
+
+      <div class="difficulty-wrap">
+        <p class="input-label">Choose thy difficulty</p>
+        <div class="difficulty-btns">
+          <button class="diff-btn active" data-diff="easy"   onclick="selectDiff(this)">☀ Easy</button>
+          <button class="diff-btn"        data-diff="normal" onclick="selectDiff(this)">⚔ Normal</button>
+          <button class="diff-btn"        data-diff="hard"   onclick="selectDiff(this)">💀 Hard</button>
+        </div>
+      </div>
+
+      <p class="input-label">Enter thy name, brave soul</p>
+      <input class="name-input" id="player-name" type="text" placeholder="Your name..." maxlength="18"/>
+
+      <div class="title-buttons">
+        <button class="btn btn-gold" onclick="startGame()">⚔ Enter the Mansion</button>
+        <button class="btn btn-ghost" onclick="showLeaderboard()">🏆 Leaderboard</button>
+        <button class="btn btn-ghost" onclick="showAbout()">📖 About</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ABOUT SCREEN ══ -->
+  <div id="screen-about" class="screen">
+    <div class="about-content">
+      <h2 class="about-title">📖 About This Game</h2>
+      <div class="about-body">
+        <p>Mansion of Destiny started as a <strong>first-semester C++ project</strong> — a text-based adventure game built using Object-Oriented Programming concepts including inheritance, polymorphism, abstract classes, and vectors.</p>
+        <br/>
+        <p>The original C++ architecture:</p>
+        <pre class="about-code">Room (abstract base class)
+  └── LuckGameRoom : public Room
+  └── playGame() — pure virtual function
+
+Player  — health, inventory, room tracking
+GameManager — vector&lt;Room&gt;, game loop</pre>
+        <br/>
+        <p>This web version <strong>translates that exact logic</strong> from C++ into JavaScript — same game mechanics, same room structure, same player system. The browser replaces the terminal: <code>cin</code> becomes button clicks, <code>cout</code> becomes DOM updates, <code>usleep()</code> becomes <code>setTimeout()</code>.</p>
+        <br/>
+        <p><strong>Tech used:</strong> HTML5 · CSS3 · Vanilla JavaScript · Web Audio API · localStorage</p>
+      </div>
+      <div class="about-links">
+        <a class="btn btn-gold" href="https://github.com" target="_blank">📂 View C++ Source on GitHub</a>
+        <button class="btn btn-ghost" onclick="showScreen('screen-title')">← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ APPROACH SCREEN (replaces direction compass) ══ -->
+  <div id="screen-approach" class="screen">
+    <div class="approach-content">
+      <div class="approach-sprite" id="approach-sprite">🧙</div>
+      <h2 class="approach-title" id="approach-title">A door stands before you...</h2>
+      <p class="approach-room-name" id="approach-room-name"></p>
+      <p class="approach-subtitle" id="approach-subtitle"></p>
+
+      <!-- Boss warning -->
+      <div class="threat-warning" id="threat-warning"></div>
+      <!-- Asura taunt -->
+      <div class="asura-taunt" id="asura-taunt"></div>
+
+      <!-- Walk / Charge / Run buttons -->
+      <div class="approach-btns">
+        <button class="approach-btn approach-charge" onclick="pickApproach('hard')">
+          <span class="approach-icon">⚔</span>
+          <span class="approach-label">Charge In!</span>
+          <span class="approach-desc">Hard challenge · More score · More risk</span>
+        </button>
+        <button class="approach-btn approach-walk" onclick="pickApproach('medium')">
+          <span class="approach-icon">🚶</span>
+          <span class="approach-label">Walk In</span>
+          <span class="approach-desc">Normal challenge · Standard rewards</span>
+        </button>
+        <button class="approach-btn approach-run" onclick="pickApproach('easy')">
+          <span class="approach-icon">🐔</span>
+          <span class="approach-label">Sneak In...</span>
+          <span class="approach-desc">Easy challenge · Less score · No shame</span>
+        </button>
+      </div>
+
+      <!-- Inventory pills -->
+      <div class="inv-bar" id="inv-bar"></div>
+
+      <!-- NPC encounter (random merchant ghost) -->
+      <div class="npc-box" id="npc-box" style="display:none;">
+        <div class="npc-msg" id="npc-msg"></div>
+        <div class="npc-btns">
+          <button class="btn btn-gold btn-sm" onclick="npcAccept()">Accept</button>
+          <button class="btn btn-ghost btn-sm" onclick="npcDecline()">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ROOM SCREEN ══ -->
+  <div id="screen-room" class="screen">
+
+    <!-- HUD -->
+    <div class="hud">
+      <div class="hud-left">
+        <span class="hud-name" id="hud-name">Hero</span>
+        <span class="hud-room" id="hud-room">Room 1/10</span>
+      </div>
+      <div class="hud-center">
+        <div class="health-wrap">
+          <span class="health-icon">❤</span>
+          <div class="health-bar-bg"><div class="health-bar-fill" id="health-fill"></div></div>
+          <span class="health-text" id="health-text">100</span>
+        </div>
+        <div class="lives-wrap" id="lives-wrap"></div>
+      </div>
+      <div class="hud-right">
+        <button class="inv-btn" id="inv-btn" onclick="toggleInventory()">🎒 <span id="inv-count">0</span></button>
+        <span class="hud-score" id="hud-score">Score: 0</span>
+      </div>
+    </div>
+
+    <!-- Inventory panel -->
+    <div class="inv-panel" id="inv-panel">
+      <div class="inv-panel-title">🎒 Inventory</div>
+      <div class="inv-items" id="inv-items"></div>
+      <button class="btn btn-ghost btn-sm" onclick="toggleInventory()">Close</button>
+    </div>
+
+    <div class="game-layout">
+
+      <!-- SIDEBAR -->
+      <div class="map-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">⚔ Progress</div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+          <div class="progress-text" id="progress-text">0 / 10 rooms</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">🏰 Castle Map</div>
+          <div class="castle-map" id="castle-map"></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">📍 Current Room</div>
+          <div class="map-dir-info" id="map-dir-info">—</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">🎒 Items</div>
+          <div class="sidebar-inv" id="sidebar-inv"></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">📊 Stats</div>
+          <div class="sidebar-stats">
+            <div class="stat-row"><span>Cleared</span><span id="stat-cleared">0/10</span></div>
+            <div class="stat-row"><span>Deaths</span><span id="stat-deaths">0</span></div>
+            <div class="stat-row"><span>Combo</span><span id="stat-combo">0x</span></div>
+            <div class="stat-row"><span>Approach</span><span id="stat-approach">—</span></div>
+            <div class="stat-row"><span>Time</span><span id="stat-time">0:00</span></div>
+          </div>
+        </div>
+        <div class="sidebar-section" id="asura-status-section" style="display:none;">
+          <div class="sidebar-label">👹 Asura</div>
+          <div class="asura-status" id="asura-status"></div>
+        </div>
+      </div>
+
+      <!-- ROOM CONTENT -->
+      <div class="room-content" id="room-content">
+        <div class="room-header">
+          <div class="room-badge" id="room-badge">Room I</div>
+          <h2 class="room-name" id="room-name"></h2>
+          <p class="room-desc" id="room-desc"></p>
+          <div class="approach-tag" id="approach-tag"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="challenge-box">
+          <div class="challenge-type" id="challenge-type">— Challenge —</div>
+          <div class="challenge-question" id="challenge-question"></div>
+        </div>
+        <div class="answer-area" id="answer-area"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="next-wrap" id="next-wrap">
+          <button class="btn btn-gold" id="next-btn" onclick="nextRoom()">Advance →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ GAME OVER ══ -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-content">
+      <div class="skull-art">💀</div>
+      <h2 class="gameover-title">You Have Fallen</h2>
+      <p class="gameover-msg" id="gameover-msg"></p>
+      <div class="gameover-stats">
+        <div class="stat-chip" id="go-rooms"></div>
+        <div class="stat-chip" id="go-score"></div>
+        <div class="stat-chip" id="go-deaths"></div>
+      </div>
+      <div class="gameover-btns">
+        <button class="btn btn-gold"  onclick="restartGame()">⚔ Try Again</button>
+        <button class="btn btn-ghost" onclick="showLeaderboard()">🏆 Leaderboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WIN ══ -->
+  <div id="screen-win" class="screen">
+    <div class="win-content">
+      <div class="win-crown">👑</div>
+      <h2 class="win-title">Victory!</h2>
+      <p class="win-msg" id="win-msg"></p>
+      <div class="win-stars" id="win-stars"></div>
+      <div class="win-stats">
+        <div class="stat-chip" id="win-hp"></div>
+        <div class="stat-chip" id="win-rooms"></div>
+        <div class="stat-chip" id="win-score"></div>
+        <div class="stat-chip" id="win-rank"></div>
+        <div class="stat-chip" id="win-deaths"></div>
+        <div class="stat-chip" id="win-time"></div>
+        <div class="stat-chip" id="win-charges"></div>
+      </div>
+      <div class="share-card" id="share-card"></div>
+      <div class="win-btns">
+        <button class="btn btn-gold"  onclick="restartGame()">⚔ Play Again</button>
+        <button class="btn btn-ghost" onclick="showLeaderboard()">🏆 Leaderboard</button>
+        <a class="btn btn-ghost" href="https://github.com" target="_blank">📂 View C++ Source</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEADERBOARD ══ -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="lb-content">
+      <h2 class="lb-title">🏆 Hall of Legends</h2>
+      <div class="lb-list" id="lb-list"></div>
+      <button class="btn btn-ghost" onclick="showScreen('screen-title')">← Back</button>
+    </div>
+  </div>
+
+  <div class="damage-flash" id="damage-flash"></div>
+  <script src="game.js"></script>
+</body>
+</html>
