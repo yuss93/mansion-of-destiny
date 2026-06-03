@@ -122,7 +122,8 @@ body::before { content:''; position:fixed; inset:0; background-image:repeating-l
 
 .title-content { position:relative; z-index:1; max-width:700px; width:100%; }
 
-.mansion-ascii { font-family:var(--font-m); font-size:clamp(5px,1.05vw,8px); line-height:1.2; color:rgba(0,40,100,.4); white-space:pre; margin-bottom:1rem; animation:fadeIn .8s ease; }
+.mansion-ascii { font-family:var(--font-m); font-size:clamp(5px,1.05vw,8px); line-height:1.2; color:rgba(0,40,100,.4); white-space:pre; margin-bottom:1rem; animation:fadeIn .8s ease;display: inline-block;
+text-align: left; }
 
 .game-title { font-family:var(--font-h); font-size:clamp(2rem,5vw,3.2rem); font-weight:900; color:var(--gold); letter-spacing:.07em; text-shadow:0 2px 0 rgba(0,0,0,.15), 0 0 30px rgba(200,120,0,.3); animation:flicker 6s infinite,fadeIn .6s ease; margin-bottom:.2rem; }
 .game-byline { font-family:var(--font-h); font-size:.6rem; letter-spacing:.22em; color:var(--text-muted); text-transform:uppercase; margin-bottom:1.5rem; }

@@ -38,7 +38,7 @@ let timerInterval=null;
 let rpsWins=0, rpsAsura=0, puzzleCorrect=0, currentPuzzleIdx=0;
 let triviaIdx=0, triviaCorrect=0;
 let wordSecret='', wordRevealed='', wordAttempts=0;
-let mazePart=0, bossHP=100, bossMaxHP=100;
+let mazePart=0, bossHP=150, bossMaxHP=200;
 let isBossTurn=false, shieldActive=false, bossHasHealed=false;
 
 /* ── NPC STATE ── */
@@ -46,9 +46,9 @@ let npcOffer=null;
 
 /* ── DIFFICULTY ── */
 const DIFF={
-  easy:   {pen:.5,  rew:1.0, bossHP:75,  boss2HP:120, label:'Easy'},
-  normal: {pen:1.0, rew:1.2, bossHP:100, boss2HP:175, label:'Normal'},
-  hard:   {pen:1.5, rew:1.5, bossHP:125, boss2HP:225, label:'Hard'}
+  easy:   {pen:.5,  rew:1.0, bossHP:100,  boss2HP:125, label:'Easy'},
+  normal: {pen:1.0, rew:1.2, bossHP:125, boss2HP:200, label:'Normal'},
+  hard:   {pen:1.5, rew:1.5, bossHP:175, boss2HP:250, label:'Hard'}
 };
 
 /* ── APPROACH VARIANTS ── */
@@ -646,6 +646,15 @@ function buildLuck(room,aa){
             const toElim=canRemove.slice(0,Math.min(elimPerWrong,remaining.length-FLOOR));
             remaining=remaining.filter(x=>x!==n&&!toElim.includes(x));
             if(!remaining.includes(secret))remaining.push(secret);
+            while (remaining.length<FLOOR){
+              const available = [];
+              for (let i=1;i<=max;i++){
+                if(!remaining.includes(i)){
+                  available.push(i);
+                }
+              }
+              remaining.push(available[rnd(available.length)]);
+            }
             remaining.sort((a,c)=>a-c);
           }
           updateQ();
